@@ -1,0 +1,24 @@
+const isBillingInfoValid = () => {
+  const phoneDigits = (formData.phone || '').replace(/\D/g, '');
+  const isPhoneValid = phoneDigits.length === 10;
+  const zipcodeDigits = (formData.zipCode || '').replace(/\D/g, '');
+  const isZipcodeValid = zipcodeDigits.length === 5;
+
+  // Protect against the child setting sentinel values while validating:
+  const sentinelInvalids = ['VALIDATING_API_STATE', 'API_FAILED_INVALID_EMAIL'];
+
+  // This will return FALSE if the child sets the email to a sentinel invalid string
+  const emailValue = formData.email || '';
+  const isEmailFormatValid = isValidEmailFormat(emailValue) && !sentinelInvalids.includes(emailValue);
+
+  const isValid = !!formData.address &&
+    !!formData.country &&
+    isZipcodeValid &&
+    !!formData.city &&
+    !!formData.state &&
+    isPhoneValid &&
+    isEmailFormatValid;
+
+  console.log(`[PARENT VALIDATION] Email is: "${formData.email}" | Is Email Valid? ${isEmailFormatValid} | Form Valid? ${isValid}`);
+  return isValid;
+};
